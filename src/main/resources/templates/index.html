@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+<title>Product Manager</title>
+</head>
+<body>
+
+<!--Test tabs-->
+
+<!--<button class="tablink" onclick="openPage('Home', this, 'red')">Home</button>-->
+<button class="tablink" onclick="openPage('News', this, 'green')" id="defaultOpen">Список продуктов</button>
+<button class="tablink" onclick="openPage('Contact', this, 'blue')">Список категорий</button>
+<!--<button class="tablink" onclick="openPage('About', this, 'orange')">About</button>-->
+
+<div id="Home" class="tabcontent">
+	<h3>Home</h3>
+
+</div>
+
+<div id="News" class="tabcontent">
+	<!--Продукт-->
+	<div align="center">
+
+		<h1>Манеджер продуктов</h1>
+		<br/><br/>
+		<form th:action="@{/}">
+			Filter: <input type="text" name="keyword" id="keyword" size="50" th:value="${keyword}" placeholder="Поиск по категориям или по имени продукта" required />
+			&nbsp;
+			<input type="submit" value="Search" />
+			&nbsp;
+			<input type="button" value="Clear" id="btnClear" onclick="clearSearch()" />
+		</form>
+		<br/><br/>
+		<h2 align="center">Список продуктов</h2>
+		<a href="new_product">Создать новый продукт</a>
+		<br>
+		<br>
+		<table border="1" cellpadding="10">
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>Название</th>
+				<th>Описание</th>
+				<th>Категория</th>
+				<th>Цена</th>
+
+				<th>Actions</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="product : ${listProducts}">
+				<td th:text="${product.id}">ID</td>
+				<td th:text="${product.name}">Наименование</td>
+				<td th:text="${product.description}">Описание</td>
+				<td>
+				<span th:each="cat : ${product.categoryList}">
+					<span th:text="${cat.name}">Категория</span>&nbsp;
+				</span>
+				</td>
+				<td th:text="${product.price}">Цена</td>
+				<td>
+					<a th:href="@{'/edit/' + ${product.id}}">Редактировать</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a th:href="@{'/delete/' + ${product.id}}">Удалить</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div id="Contact" class="tabcontent">
+
+	<!--  Категории-->
+
+	<div align="center">
+
+		<br/><br/>
+
+		<br/><br/>
+		<h2 align="center">Список котегорий</h2>
+		<a href="new_category">Создать новую категорию</a>
+		<br>
+		<br>
+		<table border="1" cellpadding="10">
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>Название</th>
+				<th>Описание</th>
+				<th>Actions</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="category : ${categoryList}">
+				<td th:text="${category.id}">ID</td>
+				<td th:text="${category.name}">Наименование</td>
+				<td th:text="${category.description}">Описание</td>
+
+				<td>
+					<a th:href="@{'/editCategory/' + ${category.id}}">Редактировать</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a th:href="@{'/deleteCategory/' + ${category.id}}">Удалить</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div id="About" class="tabcontent">
+	<h3>About</h3>
+	<p>Who we are and what we do.</p>
+</div>
+
+<style  type="text/css">
+	/* Set height of body and the document to 100% to enable "full page tabs" */
+	body, html {
+		height: 100%;
+		margin: 0;
+		font-family: Arial;
+
+	}
+
+	/* Style tab links */
+	.tablink {
+		background-color: #555;
+		color: white;
+		float: left;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		padding: 14px 16px;
+		font-size: 17px;
+		width: 25%;
+	}
+
+	.tablink:hover {
+		background-color: #777;
+	}
+
+	/* Style the tab content (and add height:100% for full page content) */
+	.tabcontent {
+		color: white;
+		display: none;
+		padding: 100px 20px;
+		height: 100%;
+	}
+	p{
+		color: #555555;
+	}
+
+	text{
+		color: #555555;
+	}
+
+	#Home {background-color: red;}
+	#News {background-color: #ccdbea;}
+	#Contact {background-color: #ccdbea;}
+	#About {background-color: orange;}
+</style>
+
+<script>
+	function openPage(pageName, elmnt, color) {
+		// Hide all elements with class="tabcontent" by default */
+		var i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+
+		// Remove the background color of all tablinks/buttons
+		tablinks = document.getElementsByClassName("tablink");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].style.backgroundColor = "";
+		}
+
+		// Show the specific tab content
+		document.getElementById(pageName).style.display = "block";
+
+		// Add the specific color to the button used to open the tab content
+		elmnt.style.backgroundColor = color;
+	}
+
+	// Get the element with id="defaultOpen" and click on it
+	document.getElementById("defaultOpen").click();
+</script>
+
+<script type="text/javascript">
+	function clearSearch() {
+		window.location = "[[@{/}]]";
+	}
+</script>
+</body>
+</html>
